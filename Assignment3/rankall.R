@@ -190,111 +190,111 @@
 # 	return(result)
 # }
 
-# rankall <- function(outcome, rank='best') {
+rankall <- function(outcome, rank='best') {
 
-# 	if (rank=='best'){
-# 		rank<-1
-# 	}
+	if (rank=='best'){
+		rank<-1
+	}
 
-# 	## read outcome data
-# 	possible_outcomes <- c('heart attack', 'heart failure', 'pneumonia')
-# 	hospitals <- read.csv("hospital-data.csv", colClasses = "character")
-# 	outcomes <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
-# 	outcomes.hospitals <- merge(outcomes, hospital, by ="Hospital.Name")
-# 	 ## check that outcome is valid
-# 	states <- unique((hospitals$State))
+	## read outcome data
+	possible_outcomes <- c('heart attack', 'heart failure', 'pneumonia')
+	hospitals <- read.csv("hospital-data.csv", colClasses = "character")
+	outcomes <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
+	outcomes.hospitals <- merge(outcomes, hospital, by ="Hospital.Name")
+	 ## check that outcome is valid
+	states <- unique((hospitals$State))
 
-# 	output <- c()
+	output <- c()
 	
-# 	grabByState <- function(state, index, amount){
-# 		state_hospitals <- subset(outcomes.hospital, outcomes.hospital$State.y == state)
-# 		target_hospitals <- subset(outcomes.hospitals, as.numeric(state_hospitals[,index]) == amount) 
-# 		target_hospital_names <- target_hospitals$Hospital.Name
-# 		result <- head(sort(target_hospital_names))
+	grabByState <- function(state, index, amount){
+		state_hospitals <- subset(outcomes.hospital, outcomes.hospital$State.y == state)
+		target_hospitals <- subset(outcomes.hospitals, as.numeric(state_hospitals[,index]) == amount) 
+		target_hospital_names <- target_hospitals$Hospital.Name
+		result <- head(sort(target_hospital_names))
 
-# 	}
+	}
 
-# 	if (!(outcome %in% possible_outcomes)) {
-# 	stop("invalid outcome")
-# 	}
+	if (!(outcome %in% possible_outcomes)) {
+	stop("invalid outcome")
+	}
 
-# 	if (outcome == 'heart attack'){
-# 		amounts <- as.numeric(outcomes.hospitals[,11])
-# 		amounts <- sort(unique(amounts))
-# 		if (rank=='worst'){
-# 			rank<-length(amounts)
-# 		}
-# 		amount <- amounts[rank]
-# 		target_hospitals <- subset(outcomes.hospitals, as.numeric(outcomes.hospitals[,11]) == amount) 
-# 	}
+	if (outcome == 'heart attack'){
+		amounts <- as.numeric(outcomes.hospitals[,11])
+		amounts <- sort(unique(amounts))
+		if (rank=='worst'){
+			rank<-length(amounts)
+		}
+		amount <- amounts[rank]
+		target_hospitals <- subset(outcomes.hospitals, as.numeric(outcomes.hospitals[,11]) == amount) 
+	}
 	
-# 	if (outcome == 'heart failure'){
-# 		amounts <- as.numeric(outcomes.hospitals[,17])
-# 		amounts <- sort(unique(amounts))
-# 		if (rank=='worst'){
-# 			rank<-length(amounts)
-# 		}
-# 		amount <- amounts[rank]
-# 		target_hospitals <- subset(outcomes.hospitals, as.numeric(outcomes.hospitals[,17]) == amount) 
-# 	}
+	if (outcome == 'heart failure'){
+		amounts <- as.numeric(outcomes.hospitals[,17])
+		amounts <- sort(unique(amounts))
+		if (rank=='worst'){
+			rank<-length(amounts)
+		}
+		amount <- amounts[rank]
+		target_hospitals <- subset(outcomes.hospitals, as.numeric(outcomes.hospitals[,17]) == amount) 
+	}
 	
-# 	if (outcome == 'pneumonia'){
-# 		amounts <- as.numeric(outcomes.hospitals[,23])
-# 		amounts <- sort(unique(amounts))
-# 		if (rank=='worst'){
-# 			rank<-length(amounts)
-# 		}
-# 		amount <- amounts[rank]
-# 		target_hospitals <- subset(outcomes.hospitals, as.numeric(outcomes.hospitals[,23]) == amount) 
-# 	}
-# 	target_hospital_names <- target_hospitals$Hospital.Name
-# 	result <- head(sort(target_hospital_names))
+	if (outcome == 'pneumonia'){
+		amounts <- as.numeric(outcomes.hospitals[,23])
+		amounts <- sort(unique(amounts))
+		if (rank=='worst'){
+			rank<-length(amounts)
+		}
+		amount <- amounts[rank]
+		target_hospitals <- subset(outcomes.hospitals, as.numeric(outcomes.hospitals[,23]) == amount) 
+	}
+	target_hospital_names <- target_hospitals$Hospital.Name
+	result <- head(sort(target_hospital_names))
 
-# 	if (identical(result, character(0))){
-# 		return(NA)
-# 	}
+	if (identical(result, character(0))){
+		return(NA)
+	}
 
-# 	return(c(target_hospitals$State, target_hospitals$Hospital.Name))
-# }
-
-rankall <- function(outcome, num = "best" ){
-  data <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
-  state <- data$State
-  state <- sort(unique(state))
-
-  hospital <- rep("", length(state))
-  
-  for (i in 1:length(state)) {
-    statedata<- data[data$State==state[i],]
-    if (outcome == 'heart attack') {
-      death <- as.numeric(statedata[,11])
-    } else if (outcome == 'heart failure') {
-      death <- as.numeric(statedata[,17])
-    } else if (outcome == 'pneumonia') {
-      death <- as.numeric(statedata[,23])
-    } else {
-      stop("invalid outcome")
-    }
-
-    a <- rank(death, na.last=NA)
-  
-    if (num=="best") {
-      r <- 1
-    } else if (num =="worst") {
-      r <- length(a)
-    } else if (num <= length(a) ) {
-      r <- num
-    } else {
-      r <- NA
-    }
-
-    if (is.na(r)) {
-      hospital[i] <- NA
-    } else {
-      hospital[i] <- statedata$Hospital.Name[order(death, statedata$Hospital.Name)[r]]
-    }
-
-  }
-
-  return(data.frame(hospital=hospital, state=state))
+	return(c(target_hospitals$State, target_hospitals$Hospital.Name))
 }
+
+# rankall <- function(outcome, num = "best" ){
+#   data <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
+#   state <- data$State
+#   state <- sort(unique(state))
+
+#   hospital <- rep("", length(state))
+  
+#   for (i in 1:length(state)) {
+#     statedata<- data[data$State==state[i],]
+#     if (outcome == 'heart attack') {
+#       death <- as.numeric(statedata[,11])
+#     } else if (outcome == 'heart failure') {
+#       death <- as.numeric(statedata[,17])
+#     } else if (outcome == 'pneumonia') {
+#       death <- as.numeric(statedata[,23])
+#     } else {
+#       stop("invalid outcome")
+#     }
+
+#     a <- rank(death, na.last=NA)
+  
+#     if (num=="best") {
+#       r <- 1
+#     } else if (num =="worst") {
+#       r <- length(a)
+#     } else if (num <= length(a) ) {
+#       r <- num
+#     } else {
+#       r <- NA
+#     }
+
+#     if (is.na(r)) {
+#       hospital[i] <- NA
+#     } else {
+#       hospital[i] <- statedata$Hospital.Name[order(death, statedata$Hospital.Name)[r]]
+#     }
+
+#   }
+
+#   return(data.frame(hospital=hospital, state=state))
+# }
